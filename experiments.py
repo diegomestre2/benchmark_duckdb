@@ -37,3 +37,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+'''Test duckdb when installed with pip install duckdb'''
