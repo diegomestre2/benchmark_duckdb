@@ -22,7 +22,7 @@ vector<pair<string, string>> getSchema(Connection &con, string_view table) {
 	return ret;
 }
 
-//! Add a column to a atable with a certain type
+//! Add a column to a a table with a certain type
 void addColumn(Connection &con, string_view table, string_view name, string_view type) {
 	// SECURITY PROBLEM - somehow we can't do prepared statements here
 	auto stmt = con.Prepare("ALTER table " + string(table) + " add column \"" + string(name) + "\" " + string(type));

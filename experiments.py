@@ -30,7 +30,7 @@ def run_and_profile_query(query):
 def main():
     create_tables()
     for probe_range in [10, 100, 1000, 10000, 100000, 1000000]:
-        print("Probe size: " + (probe_range*1000), end='')
+        print("Probe size: " + str(probe_range*1000), end='')
         populate_data(probe_range)
         run_and_profile_query(query)
 
