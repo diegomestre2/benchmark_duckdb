@@ -11,7 +11,7 @@ BuildDirectory: /Users/diegogomestome/git/benchmark_duckdb/build/release
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: wired-196.cwi.nl
+Site: dhcp-14.eduroam.cwi.nl
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Darwin-c++
@@ -26,8 +26,8 @@ SubmitURL: http://
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/local/Cellar/cmake/3.20.5/bin/cmake" "/Users/diegogomestome/git/benchmark_duckdb"
-MakeCommand: /usr/local/Cellar/cmake/3.20.5/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
+ConfigureCommand: "/usr/local/Cellar/cmake/3.22.0/bin/cmake" "/Users/diegogomestome/git/benchmark_duckdb"
+MakeCommand: /usr/local/Cellar/cmake/3.22.0/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
 # version control
@@ -63,7 +63,7 @@ UpdateType: git
 
 # Compiler info
 Compiler: /Library/Developer/CommandLineTools/usr/bin/c++
-CompilerVersion: 12.0.5.12050022
+CompilerVersion: 13.0.0.13000029
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 
