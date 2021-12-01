@@ -21,7 +21,7 @@ def remove_dir(dir_path):
         shutil.rmtree(dir_path)
 
 
-def run_duckdb_tpch(dir_path=""):
+def run_duckdb_tpch(dir_path="", queries=tpch_queries):
     if not path.exists(dir_path):
         current_dir = os.getcwd()
         current_dir += "/duckdb"
@@ -32,20 +32,20 @@ def run_duckdb_tpch(dir_path=""):
     print(dir_path)
     os.system("cd " + dir_path + " && BUILD_BENCHMARK=1 BUILD_TPCH=1 make")
     # Execute each query individually
-    for query in tpch_queries:
-        os.system("build/release/benchmark/benchmark_runner " +
+    for query in queries:
+        os.system("cd " + dir_path + " && build/release/benchmark/benchmark_runner " +
                   "benchmark/tpch/sf1/"+query+".benchmark")
 
 
-def clone_duckdb(link, dir="duckdb"):
-    os.system("git clone " + str(link) + " " + str(dir))
+def clone_duckdb(link, dir_path="duckdb"):
+    os.system("git clone " + str(link) + " " + str(dir_path))
 
 
 def main():
-    clone_duckdb(master_link)
-    run_duckdb_tpch()
-    clone_duckdb(fork_link, fork_dir)
-    run_duckdb_tpch(fork_dir)
+    # clone_duckdb(link=master_link)
+    run_duckdb_tpch(queries=["q04", "q09"])
+    #clone_duckdb(link=fork_link, dir_path=fork_dir)
+    run_duckdb_tpch(dir_path=fork_dir, queries=["q04", "q09"])
 
 
 if __name__ == "__main__":
