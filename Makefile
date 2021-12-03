@@ -1,6 +1,6 @@
 .PHONY: all opt unit clean debug release
 
-all: release debug
+all: release
 
 
 ifeq ($(GEN),ninja)

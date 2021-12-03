@@ -85,51 +85,51 @@ void DuckDBUtil::addValue(const std::vector<std::pair<std::string, var_t>> &tags
 	// ok, so now 'types' is up to date and in the right order
 
 	// make sure we have an Appender
-	if (!d_appender) {
-		d_appender = make_unique<Appender>(d_con, name.c_str());
+	/* if (!d_appender) {
+	    d_appender = make_unique<Appender>(d_con, name.c_str());
 	}
-
-	d_appender->BeginRow();
+ */
+	/* d_appender->BeginRow();
 	// these are all the fields this table has, each of them needs to be in the Appender
 	for (const auto &t : types) {
-		bool appended = false;
-		if (t.first == "timestamp") {
-			d_appender->Append<int64_t>((int64_t)tstamp);
-			continue;
-		}
-		// consult the values
-		for (const auto &v : values) {
-			if (t.first == v.first) {
-				std::visit(
-				    [this](auto &&arg) {
-					    using T = std::decay_t<decltype(arg)>;
-					    //            cerr<<"   Appending "<<arg<<endl;
-					    d_appender->Append<T>(arg);
-				    },
-				    v.second);
-				appended = true;
-				break;
-			}
-		}
-		// consult the tags
-		for (const auto &v : tags) {
-			if (t.first == v.first) {
-				std::visit(
-				    [this](auto &&arg) {
-					    using T = std::decay_t<decltype(arg)>;
-					    //            cerr<<"   Appending TAG "<<arg<<endl;
-					    d_appender->Append<T>(arg);
-				    },
-				    v.second);
-				appended = true;
-				break;
-			}
-		}
+	    bool appended = false;
+	    if (t.first == "timestamp") {
+	        d_appender->Append<int64_t>((int64_t)tstamp);
+	        continue;
+	    }
+	    // consult the values
+	    for (const auto &v : values) {
+	        if (t.first == v.first) {
+	            std::visit(
+	                [this](auto &&arg) {
+	                    using T = std::decay_t<decltype(arg)>;
+	                    //            cerr<<"   Appending "<<arg<<endl;
+	                    d_appender->Append<T>(arg);
+	                },
+	                v.second);
+	            appended = true;
+	            break;
+	        }
+	    }
+	    // consult the tags
+	    for (const auto &v : tags) {
+	        if (t.first == v.first) {
+	            std::visit(
+	                [this](auto &&arg) {
+	                    using T = std::decay_t<decltype(arg)>;
+	                    //            cerr<<"   Appending TAG "<<arg<<endl;
+	                    d_appender->Append<T>(arg);
+	                },
+	                v.second);
+	            appended = true;
+	            break;
+	        }
+	    }
 
-		if (!appended) {
-			cerr << "Did not get any data for column " << t.first << ", inserting NULL" << endl;
-			d_appender->Append<nullptr_t>(nullptr);
-		}
+	    if (!appended) {
+	        cerr << "Did not get any data for column " << t.first << ", inserting NULL" << endl;
+	        d_appender->Append<nullptr_t>(nullptr);
+	    }
 	}
-	d_appender->EndRow();
+	d_appender->EndRow(); */
 }
