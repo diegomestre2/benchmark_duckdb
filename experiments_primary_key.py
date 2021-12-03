@@ -30,7 +30,7 @@ def run_duckdb_tpch(dir_path="", queries=tpch_queries):
         dir_path = current_dir
     # Build
     print(dir_path)
-    os.system("cd " + dir_path + " && BUILD_BENCHMARK=1 BUILD_TPCH=1 make")
+    os.system("cd " + dir_path + " && BUILD_BENCHMARK=1 BUILD_TPCH=1 make -j4")
     # Execute each query individually
     for query in queries:
         os.system("cd " + dir_path + " && build/release/benchmark/benchmark_runner " +
@@ -42,10 +42,11 @@ def clone_duckdb(link, dir_path="duckdb"):
 
 
 def main():
+    test_queries = ["q04", "q07", "q09"]
     # clone_duckdb(link=master_link)
-    run_duckdb_tpch(queries=["q04", "q09"])
-    #clone_duckdb(link=fork_link, dir_path=fork_dir)
-    run_duckdb_tpch(dir_path=fork_dir, queries=["q04", "q09"])
+    run_duckdb_tpch(queries=test_queries)
+    # clone_duckdb(link=fork_link, dir_path=fork_dir)
+    run_duckdb_tpch(dir_path=fork_dir, queries=test_queries)
 
 
 if __name__ == "__main__":

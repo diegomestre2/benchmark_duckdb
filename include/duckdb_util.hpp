@@ -1,5 +1,5 @@
 #pragma once
-#include "duckdb.hpp"
+#include "../third_party/duckdb/src/include/duckdb.hpp"
 
 #include <iostream>
 #include <map>

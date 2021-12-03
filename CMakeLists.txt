@@ -14,7 +14,6 @@ cmake_minimum_required(VERSION 3.1...3.6)
 # -----------------------------------
 project(
   CppProjectExample
-  VERSION 0.1
   DESCRIPTION "An example project with CMake"
   LANGUAGES CXX)
 
@@ -79,16 +78,13 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 # ----------------------------
 # General C/C++ build settings
 # ----------------------------
-set(DUCKINCLUDE "/home/ahu/git/duckdb/src/include")
-set(DUCKLIBS "/home/ahu/git/duckdb/build/release/src")
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -fPIC -ftest-coverage")
+    "${CMAKE_CXX_FLAGS} -O3 -Wall -Wpedantic -fPIC -ftest-coverage -Wno-dev")
 set(CMAKE_CXX_FLAGS_DEBUG
-    "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -Og -g -march=native -fsanitize=address -Woverloaded-virtual"
+    "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -Og -g -march=native -fsanitize=address -Woverloaded-virtual -Wno-dev"
 )
 set(CMAKE_C_ARCHIVE_FINISH
     "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
@@ -116,10 +112,11 @@ include(FetchContent)
 if(DUCKDB_FOUND)
   # do nothing
 else(DUCKDB_FOUND)
+  message(STATUS "Fetching DuckDB...")
   FetchContent_Declare(
-    third_party/duckdb
+    duckdb
     GIT_REPOSITORY https://github.com/duckdb/duckdb.git
-    GIT_TAG v0.2.7)
+    GIT_TAG v0.2.6)
   FetchContent_MakeAvailable(duckdb)
 endif()
 
@@ -159,6 +156,8 @@ source_group(
   FILES ${HEADER_LIST})
 
 include_directories(${PROJECT_SOURCE_DIR}/third_party)
+include_directories(third_party/duckdb/src/include)
+link_directories(third_party/duckdb/build/release/src)
 add_executable(main main/main.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE bench_library)
+target_link_libraries(main PRIVATE duckdb)
