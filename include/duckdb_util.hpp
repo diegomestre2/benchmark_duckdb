@@ -1,5 +1,6 @@
 #pragma once
 #include "duckdb.hpp"
+#include "duckdb/main/appender.hpp"
 
 #include <iostream>
 #include <map>

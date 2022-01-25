@@ -1,8 +1,6 @@
 # To use a different compiler with CMake, run it as follows: cmake -D
 # CMAKE_C_COMPILER=/path/to/your/cc -D CMAKE_CXX_COMPILER=/path/to/your/c++
-#
 cmake_minimum_required(VERSION 3.1...3.6)
-
 
 # -----------------------------------
 # Project name, version & build type
@@ -64,10 +62,25 @@ endif()
 # Accumulator library This is header only, so could be replaced with git
 # submodules or FetchContent
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
-# find_package(Boost REQUIRED)
-find_package(Threads REQUIRED)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
+# ------------
+# Dependencies
+# ------------
+# find_package(Boost REQUIRED)
+find_package(Threads REQUIRED)
+
+# Fetch Dependencies
+include(FetchContent)
+message(STATUS "Fetching DuckDB...")
+FetchContent_Declare(
+  	duckdb
+  	GIT_REPOSITORY https://github.com/duckdb/duckdb.git
+  	GIT_TAG v0.3.1)
+FetchContent_MakeAvailable(duckdb)
+message("-- Duckdb Available")
+
+# Find CCACHE (Speedup recompilation)
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
   	set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
@@ -91,48 +104,30 @@ set(CMAKE_CXX_ARCHIVE_FINISH
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fsanitize=address")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 
-
-include(FetchContent)
-message(STATUS "Fetching DuckDB...")
-FetchContent_Declare(
-  	duckdb
-  	GIT_REPOSITORY https://github.com/duckdb/duckdb.git
-  	GIT_TAG v0.3.1)
-FetchContent_MakeAvailable(duckdb)
-message("-- Duckdb Available")
-
-# ------------------
-# Add link_libraries
-# ------------------
-include_directories(include)
-set(DUCKDB_UTIL src/duckdb_util.cpp)
-add_library(duckdb_util STATIC ${DUCKDB_UTIL})
-target_link_libraries(duckdb_util duckdb)
-
-target_include_directories(
-	duckdb_util
-  	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         	$<INSTALL_INTERFACE:include>
-  	PRIVATE src)
-
-# -----------------------
-# Add sources separately
-# -----------------------
-set(MAIN main/main.cpp)
-
-# Add Cpp files
-add_library(bench_library SHARED ${MAIN})
-
-# Add Hpp files
-target_include_directories(
-  	bench_library PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-                       	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
+# -------------------------------------------
 # IDEs should put the headers in a nice place
+# -------------------------------------------
 source_group(
   	TREE "${PROJECT_SOURCE_DIR}/include"
   	PREFIX "Header Files"
   	FILES ${HEADER_LIST})
 
-add_executable(main main/main.cpp)
-target_link_libraries(main duckdb_util bench_library Catch2 Catch2WithMain)
+# ------------------
+# Add and link_libraries
+# ------------------
+#include_directories(include) # include hpp files globally
+set(DUCKDB_UTIL src/duckdb_util.cpp) # set alias for cpp files
+add_library(duckdb_util_lib STATIC ${DUCKDB_UTIL}) # add cpp files to lib
+target_link_libraries(duckdb_util_lib duckdb) # add dependencies to lib
+target_include_directories( # Add Hpp files to scope
+	duckdb_util_lib
+  	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         	$<INSTALL_INTERFACE:include>
+  	PRIVATE src)
+
+# -----------------------
+# Add sources for executor separately
+# -----------------------
+set(MAIN main/main.cpp) # set alias for cpp files
+add_executable(main ${MAIN}) # add executor file
+target_link_libraries(main duckdb_util_lib) # link all libraries to the target executor

@@ -1,7 +1,7 @@
 .PHONY: all opt unit clean debug release
 
 all: release
-
+GENERATOR=
 
 ifeq ($(GEN),ninja)
 	GENERATOR=-G "Ninja"
@@ -15,12 +15,12 @@ clean:
 debug:
 	mkdir -p build/debug && \
 	cd build/debug && \
-	cmake  -DCMAKE_BUILD_TYPE=Debug ../.. && \
+	cmake  $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Debug ../.. && \
 	cmake --build .
 
 
 release:
 	mkdir -p build/release && \
 	cd build/release && \
-	cmake -DCMAKE_BUILD_TYPE=Release ../.. && \
+	cmake $(GENERATOR) $(FORCE_COLOR) -DCMAKE_BUILD_TYPE=Release ../.. && \
 	cmake --build .
