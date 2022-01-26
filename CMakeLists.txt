@@ -69,14 +69,16 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 # ------------
 # find_package(Boost REQUIRED)
 find_package(Threads REQUIRED)
-
+set(BUILD_TPCH_EXTENSION true)
+set(BUILD_BENCHMARKS true)
 # Fetch Dependencies
 include(FetchContent)
 message(STATUS "Fetching DuckDB...")
 FetchContent_Declare(
   	duckdb
   	GIT_REPOSITORY https://github.com/duckdb/duckdb.git
-  	GIT_TAG v0.3.1)
+  	GIT_TAG v0.3.1
+	CONFIGURE_COMMAND "BUILD_BENCHMARK=1 BUILD_TPCH_EXTENSION=1")
 FetchContent_MakeAvailable(duckdb)
 message("-- Duckdb Available")
 
