@@ -52,7 +52,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
   	# Docs only available if this is the main app
   	find_package(Doxygen)
-  	if(Doxygen_FOUND)
+  	if(Doxygen_FOUND AND EXISTS docs)
     	add_subdirectory(docs)
   	else()
     	message(STATUS "Doxygen not found, not building docs")
