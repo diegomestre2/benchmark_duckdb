@@ -18,7 +18,8 @@ void duckdb_hello(Connection &con) {
 }
 void create_tpch_without_pk(Connection &con) {
 	auto result = con.Query("CALL dbgen(sf=0.1);");
-	result = con.Query(".read create_tpch_no_pk.sql;");
+	result->Print();
+	result = con.Query("PRAGMA threads=1;");
 	result->Print();
 }
 
